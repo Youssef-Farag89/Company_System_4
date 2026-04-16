@@ -1,0 +1,252 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', 'sans-serif';
+}
+:root{
+    --main-color:#E09B03;
+    --main-color-2:#8B8B8B;
+    --main-color-3:#17191E;
+}
+/* setting box Start */
+.setting_box{
+    position: fixed;
+    left: -200px;
+    top: 0px;
+    width: 200px;
+    background-color: #FFFFFF;
+    height: 100vh;
+    z-index: 100000;
+    transition: 0.5s;
+}
+
+.setting_box.open{
+    left: 0px;
+}
+.setting_box .icons_settings {
+    position: absolute;
+    right: -30px;
+    top: 180px;
+    height: 30px;
+    width: 30px;
+    font-size: 25px;
+    cursor: pointer;
+    color: var(--main-color);
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.spin{
+    animation: spin 0.5s linear;
+}
+
+@keyframes spin{
+    from{
+        transform: rotate(0deg);
+    }   
+    to{
+        transform: rotate(180deg);
+    }
+}
+.setting_box .setting_container{
+    width: 100%;
+    height: 100%;
+}
+.setting_container .options_box{
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+   
+}
+
+.setting_container .options_box h1{
+    color: var(--main-color);
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #bbb7b7;
+}
+
+.setting_container .options_box ul{
+    background-color: #bbb7b7;
+    width: 100%;
+    height: 50px;
+}
+
+.setting_container .options_box ul li{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 12px;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+.setting_container .options_box ul li.active{
+    opacity: 1;
+    border: 2px solid black;
+}
+.setting_container .options_box ul li:first-child{
+
+    background-color: #E09B03;
+
+}
+.setting_container .options_box ul li:nth-child(2){
+    background-color: #008889;
+}
+.setting_container .options_box ul li:nth-child(3){
+    background-color: #B63956;
+}
+.setting_container .options_box ul li:nth-child(4){
+    background-color: #429D52;
+}
+
+.setting_container .options_box ul li:nth-child(5){
+    background-color: #2F374A;
+}
+.setting_box .options_box .randback button.active{
+    opacity: 1;
+}
+.setting_box .options_2_box{
+    margin-top: 20px;
+    position: relative;
+    background-color: #bbb7b7;
+    width: 100%;
+    height: 80px;
+    
+    
+}
+.setting_box .options_2_box h2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--main-color);
+}
+.setting_box .options_2_box .yes{
+    position: absolute;
+    width: 90px;
+    height: 30px;
+    border-radius: 8px;
+    left: 4px;
+    opacity: 0.5;
+    top: 40px;
+}
+
+.setting_box .options_2_box .no{
+    position: absolute;
+    width: 90px;
+    height: 30px;
+    border-radius: 8px;
+    left: 100px;
+    top: 40px;
+    opacity: 0.5;
+}
+/* setting box End */
+/* landing page Start */
+.container{
+    background-color: var(--main-color);
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.container .landing_page{
+    min-height: 100vh;
+    width: 100%;
+    background-color: #17191E;
+    
+}
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    background-color: #17191E;
+    
+}
+.header .logo{
+    position: relative;
+}
+.header .logo img{
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    left: 60px;
+    top: -20px;
+    z-index: 3;
+}
+
+.header ul{
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    padding-right: 40px;
+    font-size: 20px;
+    z-index: 2;
+    position: absolute;
+    top: 20px;
+    right: 40px;
+}
+.header ul li{
+    margin: 20px;
+    z-index: 2;
+}
+.header ul li a{
+    color: #EEE;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.header ul li a:hover,
+.header ul li a:active{
+    color: var(--main-color);
+}
+.intro_text{
+    position: absolute;
+    left: 60px;
+    top: 130px;
+    color: #EEE;
+    z-index: 2;
+    text-align: center;
+    line-height: 1.4
+}
+.intro_text h1{
+    font-size: 90px;
+    
+}
+.intro_text h1 span{
+    color: var(--main-color);
+    font-size: 120px;
+}
+.intro_text .p1{
+    font-size: 20px;
+    position: absolute;
+    top: 390px;
+    left: 70px;
+}
+.container button{
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 250px;
+    height: 60px;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+    border-radius: 7px;
+    border-color: var(--main-color);
+    border-width: 3px;
+    background-color: #17191E;
+    transition: 0.3s;
+}
+.container button:hover{
+    color: var(--main-color);
+}
+/* landing page End */
