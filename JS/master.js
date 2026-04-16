@@ -22,11 +22,15 @@ if (mainColors !== null) {
 
 
 // landing page
-let landingPage = document.querySelector(".landing_page");
+let landingPage = document.querySelector(".one_background");
 
 // images array
 let arrayPicture = [
-    
+    "images/one.jpg",
+    "images/two.jpg",
+    "images/three.jpg",
+    "images/four.jpg",
+    "images/five.jpg"
 ];
 
 
@@ -46,7 +50,7 @@ function randomlize() {
         // optional: save last image
         localStorage.setItem("last-bg", arrayPicture[randNum]);
 
-    }, 1000);
+    }, 10000);
 }
 
 
@@ -135,3 +139,47 @@ randomBackgroundElement.forEach(button => {
         }
     });
 });
+
+// side bar mode Start
+const navButtons = document.querySelectorAll(".navstyle button");
+
+// load saved state
+let saved = localStorage.getItem("menu-style");
+
+// apply saved mode on load
+if (saved === "side") {
+    document.body.classList.add("menu-sidebar");
+    document.body.classList.add("open");
+
+    document.querySelector('[data-nav="side"]').classList.add("active");
+} else {
+    document.body.classList.remove("menu-sidebar");
+    document.body.classList.remove("open");
+
+    document.querySelector('[data-nav="top"]').classList.add("active");
+}
+
+// click
+navButtons.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+
+        let mode = e.currentTarget.dataset.nav;
+
+        // remove active
+        navButtons.forEach(b => b.classList.remove("active"));
+        e.currentTarget.classList.add("active");
+
+        if (mode === "side") {
+            document.body.classList.add("menu-sidebar");
+            document.body.classList.add("open");
+
+            localStorage.setItem("menu-style", "side");
+        } else {
+            document.body.classList.remove("menu-sidebar");
+            document.body.classList.remove("open");
+
+            localStorage.setItem("menu-style", "top");
+        }
+    });
+});
+// side bar mode End
