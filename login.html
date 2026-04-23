@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - RafiQ</title>
+
+    <link rel="stylesheet" href="login_page/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body class="login-page">
+
+    <!-- dark mode Start -->
+                <div id="themeWidget" class="theme-widget">
+        
+                <span class="icon sun">
+            <i class="fa-solid fa-sun"></i>
+            </span>
+
+            <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+            </label>
+
+            <span class="icon moon">
+            <i class="fa-solid fa-moon"></i>
+            </span>
+
+        </div>
+        <!-- dark mode End -->
+
+        
+    <button class="home_button">
+        <a href="main.html" class="home-btn">
+    <i class="fa-solid fa-house"></i>
+</a>
+    </button>
+
+
+    <!-- hidden controller -->
+    <input type="checkbox" id="change-form" style="display:none;">
+
+    <div class="main-wrapper">
+
+        
+
+        <div class="container">
+
+            <!-- SIGN IN -->
+            <div class="form-container sign-in-container">
+
+                <form>
+
+                    <h2 class="form-title">Welcome back!</h2>
+
+                    <div class="input-group">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" placeholder="Username">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="Password">
+                    </div>
+
+                    <div class="social-container">
+                        <a href="#"><i class="fab fa-google"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        
+                    </div>
+
+                    <button class="btn-orange">Sign In</button>
+
+                    <label for="change-form" class="mobile-only-link">
+                        Create Account
+                    </label>
+
+                </form>
+
+            </div>
+
+            <!-- SIGN UP -->
+            <div class="form-container sign-up-container">
+
+                <form>
+
+                    <h2 class="form-title">Create Account</h2>
+
+                    <div class="input-group">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="text" placeholder="Email">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="Password">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="Repeat Password">
+                    </div>
+
+                    <button class="btn-orange">Sign Up</button>
+
+                    <label for="change-form" class="mobile-only-link">
+                        Sign In
+                    </label>
+
+                </form>
+
+            </div>
+
+            
+            <!-- OVERLAY -->
+            <div class="overlay-container">
+
+                <div class="overlay">
+
+                    <div class="overlay-panel overlay-left">
+
+                        <img src="images/logo.png" style="height:40px">
+
+                        <h1>Welcome Back!</h1>
+                        <p class="p1">Enter your details to continue</p>
+
+                        <label for="change-form" class="btn-white">
+                            Sign In
+                        </label>
+
+                    </div>
+
+                    <div class="overlay-panel overlay-right">
+
+                        <img src="images/logo.png" style="height:40px">
+
+                        <h2>Hello, Friend!</h2>
+                        <p>Start your journey with us</p>
+
+                        <label for="change-form" class="btn-white">
+                            Sign Up
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+<script src="JS/master.js"></script>
+</body>
+</html>
