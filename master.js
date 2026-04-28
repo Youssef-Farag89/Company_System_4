@@ -171,7 +171,7 @@ function updateDashboard() {
 
 
 // room sections start
-// Frontend change: create rooms through backend first so they receive a real room id for members/chat
+// Changed on 28/04 at 10:02 AM: create rooms through backend first so they receive a real room id for members/chat
 async function addRoom() {
     let name = prompt("Room name?");
     if (!name?.trim()) return;
@@ -271,7 +271,7 @@ function renderRooms() {
 
 
 // open room
-// Frontend change: load old backend messages and room members before rendering the selected room
+// Changed on 28/04 at 10:16 AM: load old backend messages and room members before rendering the selected room
 async function openRoom(i) {
     if (!rooms[i]) return;
 
@@ -320,7 +320,7 @@ function clearChatUI() {
 
 
 // messages Start
-// Frontend change: send text messages through WebSocket for backend rooms, with local fallback for unsaved rooms
+// Changed on 28/04 at 10:30 AM: send text messages through WebSocket for backend rooms, with local fallback for unsaved rooms
 function sendMessage() {
     const input = document.getElementById("msgInput");
     const user = getAuthUser();
@@ -361,7 +361,7 @@ function sendMessage() {
     updateRoomInfo();
 }
 
-// Frontend change: show sender name in text messages and keep all message types in one renderer
+// Changed on 28/04 at 10:38 AM: show sender name in text messages and keep all message types in one renderer
 function renderMessages() {
     const box = document.getElementById("chatBox");
     if (!box) return;
@@ -440,7 +440,7 @@ function updateRoomInfo() {
     if (msg) msg.innerText = rooms[currentRoom].messages.length;
 }
 
-// Frontend change: restore old room messages from backend after refresh or room reopen
+// Changed on 28/04 at 10:46 AM: restore old room messages from backend after refresh or room reopen
 async function loadMessagesFromServer(roomIndex = currentRoom) {
     const user = getAuthUser();
     const room = rooms[roomIndex];
@@ -474,7 +474,7 @@ async function loadMessagesFromServer(roomIndex = currentRoom) {
     }
 }
 
-// Frontend change: render room members in the right-side panel
+// Changed on 28/04 at 10:52 AM: render room members in the right-side panel
 function renderMemberList(members) {
     const list = document.getElementById("memberList");
     if (!list) return;
@@ -496,7 +496,7 @@ function renderMemberList(members) {
     });
 }
 
-// Frontend change: fetch room members from backend for the selected backend room
+// Changed on 28/04 at 10:56 AM: fetch room members from backend for the selected backend room
 async function loadRoomMembers() {
     const user = getAuthUser();
     const room = rooms[currentRoom];
@@ -529,7 +529,7 @@ async function loadRoomMembers() {
     }
 }
 
-// Frontend change: add room members by staff id from the frontend panel
+// Changed on 28/04 at 11:02 AM: add room members by staff id from the frontend panel
 async function promptAddMember() {
     const room = rooms[currentRoom];
     const user = getAuthUser();
@@ -567,7 +567,7 @@ async function promptAddMember() {
     }
 }
 
-// Frontend change: remove a selected room member through the backend API
+// Changed on 28/04 at 11:08 AM: remove a selected room member through the backend API
 async function removeMember(memberId) {
     const room = rooms[currentRoom];
     const user = getAuthUser();
@@ -597,7 +597,7 @@ async function removeMember(memberId) {
     }
 }
 
-// Frontend change: load backend rooms on startup so refresh does not lose server room metadata
+// Changed on 28/04 at 11:12 AM: load backend rooms on startup so refresh does not lose server room metadata
 async function loadRoomsFromServer() {
     const user = getAuthUser();
     if (!user?.id) return false;
@@ -716,26 +716,88 @@ function handleFile(e) {
     e.target.value = "";   
 }
 
-function startCall() {
-    if (currentRoom === null) {
+let zegoCallInstance = null;
+
+// Changed on 28/04 at 11:18 AM: start room video calls through the backend-issued ZEGOCLOUD session
+async function startCall() {
+    const user = getAuthUser();
+    const room = rooms[currentRoom];
+
+    if (currentRoom === null || !room) {
         alert("Please select a room first");
         return;
     }
 
-    const roomName = rooms[currentRoom].name;
+    if (!room.id) {
+        alert("Please use a saved server room for video calls.");
+        return;
+    }
 
-    const speech = new SpeechSynthesisUtterance();
+    if (!user?.id) {
+        alert("Please login first.");
+        return;
+    }
 
-    speech.lang = "en-US";
-    speech.rate = 1;
-    speech.pitch = 1;
+    if (typeof ZegoUIKitPrebuilt === "undefined") {
+        alert("Video call SDK failed to load.");
+        return;
+    }
 
-    speech.text = "Preparing your call now in room " + roomName;
+    try {
+        const response = await fetch(`${API_BASE}/rooms/${room.id}/video-call-session`, {
+            method: "POST",
+            headers: {
+                userId: user.id
+            }
+        });
 
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(speech);
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || "Failed to start call session");
+        }
 
-    alert("Calling " + roomName);
+        const callSession = await response.json();
+        const overlay = document.getElementById("zegoCallOverlay");
+        const root = document.getElementById("zegoCallRoot");
+
+        if (!overlay || !root) {
+            throw new Error("Call container is missing");
+        }
+
+        root.innerHTML = "";
+        overlay.style.display = "block";
+
+        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForProduction(
+            Number(callSession.appId),
+            callSession.token,
+            callSession.roomId,
+            callSession.userId,
+            callSession.userName
+        );
+
+        zegoCallInstance = ZegoUIKitPrebuilt.create(kitToken);
+        zegoCallInstance.joinRoom({
+            container: root,
+            sharedLinks: [{
+                name: "Room call",
+                url: window.location.href
+            }],
+            showPreJoinView: true,
+            turnOnCameraWhenJoining: true,
+            turnOnMicrophoneWhenJoining: true,
+            showScreenSharingButton: false,
+            scenario: {
+                mode: ZegoUIKitPrebuilt.GroupCall
+            },
+            onLeaveRoom: () => {
+                overlay.style.display = "none";
+                root.innerHTML = "";
+                zegoCallInstance = null;
+            }
+        });
+    } catch (error) {
+        alert(error.message || "Unable to start the video call");
+    }
 }
 
 
@@ -834,7 +896,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 //init Start
-// Frontend change: bootstrap server rooms before rendering the rooms page
+// Changed on 28/04 at 11:24 AM: bootstrap server rooms before rendering the rooms page
 async function initApp() {
     await loadRoomsFromServer();
     renderTasks();
@@ -872,7 +934,7 @@ async function initApp() {
 
 // profile Start
 
-// Frontend change: namespace profile storage by logged-in user to stop profile data leaking between accounts
+// Changed on 28/04 at 11:30 AM: namespace profile storage by logged-in user to stop profile data leaking between accounts
 function getProfileStorageKey(field) {
     const user = getAuthUser();
     if (!user?.id) return null;
@@ -1235,7 +1297,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //load the picture in navbar Start
 
-// Frontend change: load navbar profile data from per-user storage instead of shared browser keys
+// Changed on 28/04 at 11:44 AM: load navbar profile data from per-user storage instead of shared browser keys
 function loadNavbarProfile() {
     const name = getStoredProfileField("name", "Guest");
     const image = getStoredProfileField("image", "");
@@ -1606,7 +1668,7 @@ function logout()
 }
 document.addEventListener("DOMContentLoaded", updateNavbarState);
 
-// Frontend change: remove only the current user's stored profile photo
+// Changed on 28/04 at 11:50 AM: remove only the current user's stored profile photo
 function removeProfilePhoto() 
 {
     if (confirm("Are you sure you want to remove your profile photo?")) 
@@ -1623,7 +1685,7 @@ function removeProfilePhoto()
     }
 }
 
-// Frontend change: remove only the current user's stored cover photo
+// Changed on 28/04 at 11:52 AM: remove only the current user's stored cover photo
 function removeCoverPhoto() 
 {
     if (confirm("Are you sure you want to remove your cover photo?")) 

@@ -143,6 +143,7 @@
 
     <div class="room-members">
         <h4>Members</h4>
+        <!-- Changed on 28/04 at 10:08 AM: added room member actions for backend-backed member management -->
         <div class="member-actions">
             <button class="btn" onclick="promptAddMember()">Add Member</button>
             <button class="btn" onclick="loadRoomMembers()">Refresh</button>
@@ -158,16 +159,23 @@
 
 </div>
 
+<!-- Changed on 28/04 at 10:14 AM: added ZEGOCLOUD full-screen call container for room video calls -->
+<div id="zegoCallOverlay" style="display:none; position:fixed; inset:0; background:#0b1220; z-index:9999;">
+    <div id="zegoCallRoot" style="width:100%; height:100%;"></div>
+</div>
+
 
 
 <!-- ================= SCRIPT ================= -->
 <script src="JS/master.js"></script>
-<!-- Frontend change: add SockJS/STOMP libraries so room chat can connect to backend WebSocket -->
+<!-- Changed on 28/04 at 10:21 AM: added SockJS/STOMP libraries so room chat can connect to backend WebSocket -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<!-- Changed on 28/04 at 11:05 AM: added ZEGOCLOUD prebuilt SDK for room video calls -->
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
 <script>
 
-    // Frontend change: keep one active room socket subscription and reconnect when switching rooms
+    // Changed on 28/04 at 10:27 AM: keep one active room socket subscription and reconnect when switching rooms
     let stompClient = null;
     let stompSubscription = null;
     let connectedRoomId = null;
@@ -177,7 +185,7 @@
         return rooms[currentRoom].id ?? null;
     }
 
-    // Frontend change: clean up room socket state before reconnecting or leaving the page
+    // Changed on 28/04 at 10:34 AM: clean up room socket state before reconnecting or leaving the page
     function disconnectSocket() {
         if (stompSubscription) {
             stompSubscription.unsubscribe();
@@ -192,7 +200,7 @@
         connectedRoomId = null;
     }
 
-    // Frontend change: subscribe to backend room topic for live messages
+    // Changed on 28/04 at 10:42 AM: subscribe to backend room topic for live messages
     function connect(roomId) {
         if (!roomId) return;
         if (connectedRoomId === roomId && stompClient?.connected) return;
@@ -212,7 +220,7 @@
         });
     }
 
-    // Frontend change: normalize incoming WebSocket messages into the existing room UI structure
+    // Changed on 28/04 at 10:48 AM: normalize incoming WebSocket messages into the existing room UI structure
     function displayMessage(chatMessage) {
         if (typeof currentRoom !== "number" || !rooms[currentRoom]) return;
 
